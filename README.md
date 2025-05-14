@@ -83,14 +83,14 @@ cd ludus-alea
 
   1. **Inicio de  Sesion**
 
-    ![Pantalla de login](readme-img/login.png)
+![Pantalla de login](readme-img/login.png)
         
         Introduce los siguientes credenciales:
        
        -  Email: admin@gmail.com
        - Contraseña: 123456 
     
-    1. **Vista de cuenta  Administrador**
+2. **Vista de cuenta  Administrador**
     -  Home Vacio:
 
     ![Home Admin](readme-img/adminVacio.png)
