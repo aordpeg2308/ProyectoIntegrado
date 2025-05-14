@@ -78,6 +78,13 @@ class PartidaController extends Controller
             'nombre' => 'required',
             'juego_id' => 'required|exists:juegos,id',
             'fecha' => 'required|date|after:now',
+        ], [
+            'nombre.required' => 'El nombre de la partida es obligatorio.',
+            'juego_id.required' => 'Debes seleccionar un juego.',
+            'juego_id.exists' => 'El juego seleccionado no existe.',
+            'fecha.required' => 'La fecha es obligatoria.',
+            'fecha.date' => 'La fecha debe tener un formato válido.',
+            'fecha.after' => 'La fecha debe ser posterior al momento actual.',
         ]);
 
         $partida = Partida::create([
@@ -117,6 +124,10 @@ class PartidaController extends Controller
 
         $validated = $request->validate([
             'fecha' => 'required|date|after:now',
+        ], [
+            'fecha.required' => 'La fecha es obligatoria.',
+            'fecha.date' => 'La fecha debe tener un formato válido.',
+            'fecha.after' => 'La fecha debe ser posterior al momento actual.',
         ]);
 
         $partida->update($validated);
