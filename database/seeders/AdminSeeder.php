@@ -17,6 +17,7 @@ class AdminSeeder extends Seeder
             'password' => Hash::make('23081997a-'),
             'rol' => 'admin',
             'tipo' => 'entero',
+            'activo'=> true,
         ]);
     }
 }

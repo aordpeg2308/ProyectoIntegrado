@@ -66,6 +66,7 @@ class UserController extends Controller
 
         $user = User::create([
             ...$validated,
+            'activo' => true,
             'password' => Hash::make($password)
         ]);
 
@@ -135,6 +136,7 @@ class UserController extends Controller
         $user->apellidos = $validated['apellidos'];
         $user->rol = $validated['rol'];
         $user->tipo = $validated['tipo'];
+        $user->activo = $request->has('activo');
     }
 
     $user->save();

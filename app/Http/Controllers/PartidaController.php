@@ -14,37 +14,33 @@ use Illuminate\Support\Facades\Gate;
 class PartidaController extends Controller
 {
     public function index(Request $request)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    $partidas = Partida::with('juego', 'jugadores')
-        ->where('fecha', '>', now())
-        ->whereDoesntHave('jugadores', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })
-        ->where('creador_id', '!=', $user->id)
-        ->get()
-        ->filter(function ($p) {
-            return $p->jugadores->count() < $p->juego->max_jugadores;
-        });
+        $partidas = Partida::with('juego', 'jugadores')
+            ->where('fecha', '>', now())
+            ->whereDoesntHave('jugadores', fn($q) => $q->where('user_id', $user->id))
+            ->where('creador_id', '!=', $user->id)
+            ->whereHas('creador', fn($q) => $q->where('activo', true))
+            ->get()
+            ->filter(fn($p) => $p->jugadores->count() < $p->juego->max_jugadores);
 
-    if ($request->filled('buscar')) {
-        $partidas = $partidas->filter(function ($p) use ($request) {
-            return str_contains(strtolower($p->nombre), strtolower($request->buscar));
-        });
+        if ($request->filled('buscar')) {
+            $partidas = $partidas->filter(fn($p) =>
+                str_contains(strtolower($p->nombre), strtolower($request->buscar))
+            );
+        }
+
+        return view('partidas.index', compact('partidas'));
     }
-
-    return view('partidas.index', compact('partidas'));
-}
 
     public function creadas()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
+        if (!Auth::check()) return redirect()->route('login');
 
         $partidas = Partida::with('juego', 'jugadores')
             ->where('creador_id', Auth::id())
+            ->whereHas('creador', fn($q) => $q->where('activo', true))
             ->get();
 
         return view('partidas.organizadas', compact('partidas'));
@@ -52,9 +48,7 @@ class PartidaController extends Controller
 
     public function participadas()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
+        if (!Auth::check()) return redirect()->route('login');
 
         $partidas = Auth::user()->partidas()
             ->where('creador_id', '!=', Auth::id())
@@ -84,15 +78,6 @@ class PartidaController extends Controller
             'nombre' => 'required',
             'juego_id' => 'required|exists:juegos,id',
             'fecha' => 'required|date|after:now',
-        ],[
-            'nombre.required' => 'El nombre de la partida es obligatorio.',
-            'nombre.string' => 'El nombre debe ser un texto válido.',
-            'nombre.max' => 'El nombre no puede superar los 255 caracteres.',
-            'juego_id.required' => 'Debes seleccionar un juego.',
-            'juego_id.exists' => 'El juego seleccionado no existe.',
-            'fecha.required' => 'Debes indicar una fecha.',
-            'fecha.date' => 'La fecha introducida no es válida.',
-            'fecha.after' => 'La fecha debe ser posterior al momento actual.',
         ]);
 
         $partida = Partida::create([
@@ -107,7 +92,8 @@ class PartidaController extends Controller
         );
 
         $mensajeUsuarios = "Se ha creado la partida '{$partida->nombre}', que se jugará el {$validated['fecha']}. Puedes unirte desde la sección de partidas disponibles.";
-        User::where('id', '!=', Auth::id())->each(function ($user) use ($mensajeUsuarios) {
+
+        User::where('id', '!=', Auth::id())->where('activo', true)->each(function ($user) use ($mensajeUsuarios) {
             Mail::to($user->email)->send(new GenericMail('Nueva partida disponible - Ludus Alea', $mensajeUsuarios));
         });
 
@@ -164,13 +150,10 @@ class PartidaController extends Controller
 
     public function join(Partida $partida)
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
+        if (!Auth::check()) return redirect()->route('login');
 
         if (!$partida->jugadores->contains(Auth::id())) {
             $partida->jugadores()->attach(Auth::id());
-
             Mail::to(Auth::user()->email)->send(
                 new GenericMail('Unido a partida - Ludus Alea', "Te has unido a la partida '{$partida->nombre}'")
             );
@@ -181,13 +164,10 @@ class PartidaController extends Controller
 
     public function leave(Partida $partida)
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
+        if (!Auth::check()) return redirect()->route('login');
 
         if ($partida->jugadores->contains(Auth::id())) {
             $partida->jugadores()->detach(Auth::id());
-
             Mail::to(Auth::user()->email)->send(
                 new GenericMail('Salida de partida - Ludus Alea', "Te has salido de la partida '{$partida->nombre}'")
             );

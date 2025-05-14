@@ -9,7 +9,7 @@
                 @csrf
                 @method('PATCH')
 
-                {{-- Nombre --}}
+                
                 <div class="mb-4">
                     <label for="nombre" class="block text-[#2e2d55] font-semibold mb-2">Nombre del juego</label>
                     <input type="text" name="nombre" id="nombre"
@@ -20,7 +20,7 @@
                     @enderror
                 </div>
 
-                {{-- Mínimo de jugadores --}}
+                
                 <div class="mb-4">
                     <label for="min_jugadores" class="block text-[#2e2d55] font-semibold mb-2">Mínimo de jugadores</label>
                     <input type="number" name="min_jugadores" id="min_jugadores" min="1"
@@ -31,7 +31,7 @@
                     @enderror
                 </div>
 
-                {{-- Máximo de jugadores --}}
+              
                 <div class="mb-4">
                     <label for="max_jugadores" class="block text-[#2e2d55] font-semibold mb-2">Máximo de jugadores</label>
                     <input type="number" name="max_jugadores" id="max_jugadores" min="1"
@@ -42,9 +42,9 @@
                     @enderror
                 </div>
 
-                {{-- Responsable del juego --}}
+                
                 <div class="mb-6">
-                    <label for="user_id" class="block text-[#2e2d55] font-semibold mb-2">Responsable del juego</label>
+                    <label for="user_id" class="block text-[#2e2d55] font-semibold mb-2">Dueño del juego</label>
                     <select name="user_id" id="user_id"
                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f49d6e]">
                         <option value="">Selecciona un usuario</option>

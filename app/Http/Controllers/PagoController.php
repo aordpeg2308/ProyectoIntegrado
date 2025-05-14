@@ -46,7 +46,7 @@ public function index()
             return redirect()->route('acceso.denegado');
         }
 
-        $usuarios = User::all();
+        $usuarios = User::where('activo', true)->get();
         return view('pagos.create', compact('usuarios'));
     }
 

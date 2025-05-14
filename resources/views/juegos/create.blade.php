@@ -43,7 +43,7 @@
 
               
                 <div class="mb-6">
-                    <label for="user_id" class="block text-[#2e2d55] font-semibold mb-2">Responsable del juego</label>
+                    <label for="user_id" class="block text-[#2e2d55] font-semibold mb-2">Dueño del juego</label>
                     <select name="user_id" id="user_id"
                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f49d6e]">
                         <option value="">Selecciona un usuario</option>

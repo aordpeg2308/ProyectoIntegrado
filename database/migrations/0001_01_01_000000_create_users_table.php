@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('rol', ['admin', 'tesorero', 'normal'])->default('normal');
             $table->enum('tipo', ['entero', 'semi'])->default('entero');
-            
+            $table->boolean('activo')->default(true);
             $table->rememberToken();
             $table->timestamps();
 

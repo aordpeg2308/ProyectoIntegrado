@@ -25,6 +25,12 @@ class SessionController extends Controller
                 'email' => 'Estas credenciales no son correctas.'
             ]);
         }
+         if (!Auth::user()->activo) {
+        Auth::logout();
+        throw ValidationException::withMessages([
+            'email' => 'Este usuario está dado de baja.'
+        ]);
+    }
 
         $request->session()->regenerate();
         return redirect()->route('home');
