@@ -14,7 +14,7 @@
         @guest
             <a href="{{ route('login') }}"
                class="{{ $currentRoute === 'login' ? 'text-[#f49d6e] font-semibold' : 'hover:text-[#f49d6e]' }}">
-                Log In
+                Iniciar Sesión
             </a>
         @endguest
 

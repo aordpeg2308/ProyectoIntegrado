@@ -57,12 +57,14 @@
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div class="mb-4">
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="activo" {{ $user->activo ? 'checked' : '' }}>
-                                <span class="ml-2">Usuario activo</span>
-                            </label>
-                        </div>
+                             @if(auth()->id() !== $user->id)
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="activo" {{ $user->activo ? 'checked' : '' }}>
+                                        <span class="ml-2">Usuario activo</span>
+                                    </label>
+                                </div>
+                            @endif
 
                     @endif
                 @endcan
