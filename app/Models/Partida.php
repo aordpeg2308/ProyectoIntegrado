@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Partida extends Model
 {
@@ -29,5 +30,13 @@ class Partida extends Model
     public function jugadores()
     {
         return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    protected function fecha(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => \Carbon\Carbon::parse($value),
+            set: fn($value) => $value // no lo toques al guardar
+        );
     }
 }

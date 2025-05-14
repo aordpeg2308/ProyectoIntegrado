@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->integer('min_jugadores');
             $table->integer('max_jugadores');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ludus Alea</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-    <!-- Styles / Scripts -->
+    
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
         @vite(['resources/css/app.css'])
     @endif
 </head>
-<body class="flex flex-col min-h-screen text-[#2e2d55] bg-[#f6d6ba] relative">
+<body class="flex flex-col min-h-screen text-[#2e2d55] bg-[#a46f40] relative">
 
-    <!-- Imagen de fondo centrada -->
+   
     <div class="absolute inset-0 flex justify-center items-center opacity-80 pointer-events-none">
         <img src="{{ asset('logo.png') }}" alt="Fondo Ludus Alea" class="max-h-full max-w-full">
     </div>
@@ -28,12 +28,48 @@
         @include('partials.navbar')
     </header>
 
-    <main class="flex-grow container mx-auto p-6 rounded-md shadow-md relative z-10">
+    <main class="flex-grow w-full p-6 relative z-10">
+
         @yield('content')
     </main>
+<footer class=" bg-slate-700 text-[#f49d6e] py-6 relative z-10 px-6">
+    <div class="flex items-center justify-between w-full max-w-7xl mx-auto relative">
+        
+        <div class="flex items-center space-x-2">
+            <span class="text-sm">¡Síguenos!</span>
+            <a href="https://www.instagram.com/ludus_alea/" target="_blank" rel="noopener noreferrer" class="hover:text-[#f49d6e]">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                    <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm5.25-.75a1 1 0 110 2 1 1 0 010-2z"/>
+                </svg>
+            </a>
+        </div>
 
-    <footer class="bg-[#2e2d55] text-white text-center py-4 relative z-10">
-        Aplicación desarrollada por 🦫 en 2025
-    </footer>
+        
+        <p class="absolute left-1/2 -translate-x-1/2 text-sm text-gray-300 text-center">
+            &copy; {{ date('Y') }} Ludus Alea. Todos los derechos reservados.
+        </p>
+
+        
+        <div class="w-120"></div>
+    </div>
+</footer>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function () {
+                const btn = form.querySelector('#submit-btn');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.textContent = 'Enviando...';
+                }
+            });
+        });
+    });
+</script>
+
+@stack('scripts')
 </body>
 </html>

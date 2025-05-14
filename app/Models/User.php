@@ -32,7 +32,12 @@ class User extends Authenticatable
         ];
     }
 
-    // Relaciones
+    
+    public function juegos()
+    {   
+    return $this->hasMany(Juego::class);
+    }
+
     public function partidasCreadas()
     {
         return $this->hasMany(Partida::class, 'creador_id');
