@@ -24,7 +24,6 @@ Incluye autenticación con control de acceso por roles (`admin`, `tesorero`, `no
 - ✅ Tailwind CSS
 - ✅ PHP 8.2+
 - ✅ Composer
-- ✅ Node.js & NPM
 - ✅ Laravel Herd (recomendado)
 - ✅ Visual Studio Code
 
