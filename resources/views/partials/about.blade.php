@@ -182,3 +182,47 @@
         </div>
     </div>
 </div>
+<script>
+    let currentIndex = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const thumbs = document.querySelectorAll('.carousel-thumb');
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('opacity-100', 'z-10');
+            slide.classList.add('opacity-0', 'z-0');
+            if (i === index) {
+                slide.classList.add('opacity-100', 'z-10');
+                slide.classList.remove('opacity-0', 'z-0');
+            }
+        });
+
+        thumbs.forEach((thumb, i) => {
+            thumb.classList.remove('opacity-100', 'border-[#2e2d55]');
+            thumb.classList.add('opacity-50');
+            if (i === index) {
+                thumb.classList.remove('opacity-50');
+                thumb.classList.add('opacity-100', 'border-[#2e2d55]');
+            }
+        });
+
+        currentIndex = index;
+    }
+
+    function moveSlide(direction) {
+        let newIndex = currentIndex + direction;
+        if (newIndex < 0) newIndex = slides.length - 1;
+        if (newIndex >= slides.length) newIndex = 0;
+        showSlide(newIndex);
+    }
+
+    thumbs.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            const index = parseInt(thumb.dataset.index);
+            showSlide(index);
+        });
+    });
+
+    setInterval(() => moveSlide(1), 6000);
+</script>
+

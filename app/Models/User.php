@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,5 +52,18 @@ class User extends Authenticatable
     public function pagos()
     {
         return $this->hasMany(Pago::class);
+    }
+
+     public function proximoPago()
+    {
+        $multiplo = $this->tipo === 'semi' ? 10 : 25;
+        $totalCantidad = $this->pagos->sum('cantidad');
+        $totalMeses = $totalCantidad / $multiplo;
+
+        $fechaBase = $this->pagos->sortBy('fecha')->first()?->fecha;
+
+        if (!$fechaBase) return null;
+
+        return Carbon::parse($fechaBase)->addMonths($totalMeses);
     }
 }

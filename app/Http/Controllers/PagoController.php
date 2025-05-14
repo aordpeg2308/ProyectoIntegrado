@@ -51,16 +51,16 @@ public function index()
     }
 
     public function store(Request $request)
-    {
-        if (!Gate::allows('create', Pago::class)) {
-            return redirect()->route('acceso.denegado');
-        }
+{
+    if (!Gate::allows('create', Pago::class)) {
+        return redirect()->route('acceso.denegado');
+    }
 
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'cantidad' => 'required|numeric|min:10',
-            'fecha' => 'required|date',
-        ], [
+    $validated = $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'cantidad' => 'required|numeric|min:10',
+        'fecha' => 'required|date',
+    ], [
         'user_id.required' => 'Debes seleccionar un usuario.',
         'user_id.exists' => 'El usuario seleccionado no es válido.',
         'cantidad.required' => 'Debes indicar una cantidad.',
@@ -68,23 +68,31 @@ public function index()
         'cantidad.min' => 'La cantidad mínima es de 10€.',
         'fecha.required' => 'Debes indicar una fecha.',
         'fecha.date' => 'La fecha no tiene un formato válido.',
-        ]);
+    ]);
 
-        $user = User::findOrFail($validated['user_id']);
+    $user = User::findOrFail($validated['user_id']);
+    $multiploEsperado = $user->tipo === 'semi' ? 10 : 25;
 
-        $multiploEsperado = $user->tipo === 'semi' ? 10 : 25;
-        if ($validated['cantidad'] % $multiploEsperado !== 0) {
-            return back()->withErrors(['cantidad' => "La cantidad debe ser múltiplo de $multiploEsperado."]);
-        }
-
-        $pago = Pago::create($validated);
-
-        $mesesPagados = $validated['cantidad'] / $multiploEsperado;
-        $proximoPago = Date::parse($validated['fecha'])->addMonths($mesesPagados)->format('d/m/Y');
-
-        $mensaje = "Gracias por tu pago. Has abonado $mesesPagados mes(es). Tu próximo pago será el $proximoPago.";
-        Mail::to($user->email)->send(new GenericMail('Confirmación de pago - Ludus Alea', $mensaje));
-
-        return redirect()->route('home');
+    if ($validated['cantidad'] % $multiploEsperado !== 0) {
+        return back()->withErrors(['cantidad' => "La cantidad debe ser múltiplo de $multiploEsperado."]);
     }
+
+    $pago = Pago::create($validated);
+
+    
+    $ultimoPago = Pago::where('user_id', $user->id)->orderBy('fecha', 'desc')->get();
+
+    $totalCantidad = $ultimoPago->sum('cantidad');
+    $totalMeses = $totalCantidad / $multiploEsperado;
+
+ 
+    $fechaBase = $ultimoPago->sortBy('fecha')->first()->fecha;
+    $proximoPago = Carbon::parse($fechaBase)->addMonths($totalMeses)->format('d/m/Y');
+
+    
+    $mensaje = "Gracias por tu pago. Has abonado $totalMeses mes(es) en total. Tu próximo pago será el $proximoPago.";
+    Mail::to($user->email)->send(new GenericMail('Confirmación de pago - Ludus Alea', $mensaje));
+
+    return redirect()->route('home');
+}
 }

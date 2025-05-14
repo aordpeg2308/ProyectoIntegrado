@@ -20,10 +20,12 @@ class HomeController extends Controller
         $grafica = collect();
         $partidasOrganizadas = collect();
         $partidasParticipadas = collect();
+        $proximosPagos = collect();
 
         $user = auth()->user();
 
         if ($user) {
+            // Usuarios
             if (Gate::allows('viewAny', User::class)) {
                 $query = User::query()->where('id', '!=', $user->id);
 
@@ -34,6 +36,7 @@ class HomeController extends Controller
                 $usuarios = $query->get();
             }
 
+         
             if (Gate::allows('viewAny', Juego::class)) {
                 $query = Juego::query();
 
@@ -44,6 +47,7 @@ class HomeController extends Controller
                 $juegos = $query->get();
             }
 
+           
             $query = Partida::where('creador_id', $user->id);
 
             if ($request->filled('buscar_organizadas')) {
@@ -52,6 +56,7 @@ class HomeController extends Controller
 
             $partidasOrganizadas = $query->get();
 
+            
             $query = $user->partidas()->where('creador_id', '!=', $user->id);
 
             if ($request->filled('buscar_participadas')) {
@@ -72,6 +77,48 @@ class HomeController extends Controller
                             return $pagosUsuario->sum('cantidad') / $multiplo;
                         });
                     });
+
+                
+                $proximosPagos = User::all()->map(function ($user) {
+                    $pagos = $user->pagos;
+                    $multiplo = $user->tipo === 'semi' ? 10 : 25;
+                    $mesActual = now()->month;
+
+                    if ($pagos->isEmpty()) {
+                        $mesesDebidos = $mesActual;
+                        return [
+                            'nombre' => $user->nombre,
+                            'tipo' => $user->tipo,
+                            'estado_pago' => 'pendiente',
+                            'mensaje' => "Debe {$mesesDebidos} " . ($mesesDebidos === 1 ? 'mes' : 'meses'),
+                        ];
+                    } else {
+                        $ultimoPago = $pagos->sortByDesc('fecha')->first();
+                        $mesUltimoPago = Carbon::parse($ultimoPago->fecha)->month;
+
+                        if ($mesUltimoPago === $mesActual) {
+                            $totalCantidad = $pagos->sum('cantidad');
+                            $totalMeses = $totalCantidad / $multiplo;
+                            $fechaBase = $pagos->sortBy('fecha')->first()->fecha;
+                            $proximoPago = Carbon::parse($fechaBase)->addMonths($totalMeses);
+
+                            return [
+                                'nombre' => $user->nombre,
+                                'tipo' => $user->tipo,
+                                'estado_pago' => 'ok',
+                                'proximo_pago' => $proximoPago,
+                            ];
+                        } else {
+                            $mesesDebidos = $mesActual - $mesUltimoPago;
+                            return [
+                                'nombre' => $user->nombre,
+                                'tipo' => $user->tipo,
+                                'estado_pago' => 'pendiente',
+                                'mensaje' => "Debe {$mesesDebidos} " . ($mesesDebidos === 1 ? 'mes' : 'meses'),
+                            ];
+                        }
+                    }
+                });
             }
         }
 
@@ -81,7 +128,8 @@ class HomeController extends Controller
             'pagos',
             'grafica',
             'partidasOrganizadas',
-            'partidasParticipadas'
+            'partidasParticipadas',
+            'proximosPagos'
         ));
     }
 }
