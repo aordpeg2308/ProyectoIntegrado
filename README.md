@@ -24,7 +24,7 @@ Incluye autenticación con control de acceso por roles (`admin`, `tesorero`, `no
 - ✅ Tailwind CSS
 - ✅ PHP 8.2+
 - ✅ Composer
-- ✅ Laravel Herd (recomendado)
+- ✅ Laravel Herd 
 - ✅ Visual Studio Code
 
 ---
@@ -37,25 +37,29 @@ Incluye autenticación con control de acceso por roles (`admin`, `tesorero`, `no
 git clone https://github.com/tu_usuario/ludus-alea.git
 cd ludus-alea
 
-2. **Instalar dependencias de PHP**
+2. **Crear un proyecto existente en Herd**
+ 
+ Iremos a Sites, link Existing Project y eligiremos la ruta del repositorio
+
+3. **Instalar dependencias de PHP**
 
     composer install
 
-3. **Instalar dependencias de JS**
+4. **Instalar dependencias de JS**
 
         npm install
 
 
-3. **Configurar el archivo .env**
+5. **Configurar el archivo .env**
         
         cp .env.example .env 
 
 
         APP_NAME="Ludus Alea"
-        APP_URL=http://localhost
+        APP_URL= la url que te dio laravel herd
 
         DB_CONNECTION=sqlite
-        DB_DATABASE=/ruta/completa/a/base_de_datos.sqlite
+       
 
         MAIL_MAILER=smtp
         MAIL_HOST=smtp.gmail.com
@@ -66,12 +70,18 @@ cd ludus-alea
         MAIL_FROM_ADDRESS=tu_correo@gmail.com
         MAIL_FROM_NAME="Ludus Alea"
 
-4. **Generar clave de la aplicación**
+6. **Generar clave de la aplicación**
 
 
         php artisan key:generate
 
+7. **Crear la BBBDD en database**   
+
+        En la carpeta database crea un archivo database.sqlite
+
 5. **Ejecutar migraciones y semilla por defecto**
+
+
         php artisan migrate:fresh --seed 
 
 6. **Arrancar el proyecto**
