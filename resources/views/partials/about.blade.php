@@ -21,19 +21,27 @@
                 <div class="py-2">
                     <details class="group">
                         <summary class="flex cursor-pointer items-center justify-between font-medium">
-                            <span>¿Qué es el rol?</span>
+                            <span>¿Qué actividades organizamos?</span>
                             <span class="transition group-open:rotate-180">
                                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                             </span>
                         </summary>
-                        <p class="mt-3 text-neutral-600">El rol es un juego narrativo donde interpretas personajes en una historia.</p>
+                        <p class="mt-3 text-neutral-600">Las actividades que organizamos son:</p>
+                         <ul class="list-disc list-inside space-y-1 pl-2">
+                        <li>Partidas de Rol
+                        <li>Draft y partidas casuales de Magic the Gathering</li>
+                        <li>Rol en vivo</li>
+                        <li>Batallas de Wargames</li>
+                        <li>Cineforum con temática friki</li>
+                        <li>Speedruns de videojuegos indies</li>
+            </ul>
                     </details>
                 </div>
 
                 <div class="py-2">
                     <details class="group">
                         <summary class="flex cursor-pointer items-center justify-between font-medium">
-                            <span>¿Qué actividades realizamos?</span>
+                            <span>¿Cómo es el local?</span>
                             <span class="transition group-open:rotate-180">
                                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                             </span>
