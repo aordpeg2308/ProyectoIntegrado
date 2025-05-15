@@ -56,7 +56,7 @@ cd ludus-alea
 
 
         APP_NAME="Ludus Alea"
-        APP_URL= la url que te dio laravel herd
+        APP_URL= la url que te dio Laravel Herd cuando accedes a Sites
 
         DB_CONNECTION=sqlite
        
