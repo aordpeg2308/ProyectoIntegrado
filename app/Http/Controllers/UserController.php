@@ -12,8 +12,6 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
- 
-
     public function create()
     {
         if (!Gate::allows('create', User::class)) {
@@ -122,7 +120,10 @@ class UserController extends Controller
             $user->apellidos = Str::title($validated['apellidos']);
             $user->rol = $validated['rol'];
             $user->tipo = $validated['tipo'];
-            $user->activo = $request->has('activo');
+
+            if (auth()->id() !== $user->id) {
+                $user->activo = $request->boolean('activo');
+            }
         }
 
         $user->save();
