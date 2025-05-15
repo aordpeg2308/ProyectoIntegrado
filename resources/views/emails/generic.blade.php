@@ -6,7 +6,9 @@
 </head>
 <body style="background-color: #fef3c7; font-family: sans-serif; padding: 2rem;">
     <div style="text-align: center;">
-        <img src="https://i.postimg.cc/SRdtzFJ9/logo.png" alt="Logo" style="max-width: 200px; margin-bottom: 1.5rem;">
+
+        
+        <img src="https://raw.githubusercontent.com/aordpeg2308/ProyectoIntegrado/main/logo.png" alt="Logo" style="max-width: 200px; margin-bottom: 1.5rem;">
     </div>
 
     <div style="background-color: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
