@@ -17,27 +17,7 @@ class PagoController extends Controller
   
 
 
-public function index()
-{
-    if (!Gate::allows('viewAny', Pago::class)) {
-        return redirect()->route('acceso.denegado');
-    }
 
-    $pagos = Pago::with('user')->get();
-
-    $grafica = Pago::with('user')->get()->groupBy(function ($pago) {
-        return Carbon::parse($pago->fecha)->format('Y-m');
-    })->map(function ($pagosMes) {
-        return $pagosMes->groupBy('user_id')->map(function ($pagosUsuario) {
-            $usuario = $pagosUsuario->first()->user;
-            $multiplo = $usuario->tipo === 'semi' ? 10 : 25;
-            $total = $pagosUsuario->sum('cantidad');
-            return $total / $multiplo;
-        });
-    });
-
-    return view('pagos.index', compact('pagos', 'grafica'));
-}
 
 
     public function create()

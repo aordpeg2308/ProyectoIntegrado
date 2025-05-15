@@ -32,7 +32,7 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($usuarios as $user)
-                        <tr class="hover:bg-[#f6d6ba]/60 transition">
+                        <tr class="hover:bg-[#f6d6ba]/60 transition {{ !$user->activo ? 'bg-red-400' : '' }}">
                             <td class="p-4">{{ $user->nombre }}</td>
                             <td class="p-4">{{ $user->apellidos }}</td>
                             <td class="p-4">{{ $user->email }}</td>

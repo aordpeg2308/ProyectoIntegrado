@@ -12,22 +12,7 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
-    {
-        if (!Gate::allows('viewAny', User::class)) {
-            return redirect()->route('acceso.denegado');
-        }
-
-        $query = User::query()->where('rol', '!=', 'admin');
-
-        if ($request->filled('buscar')) {
-            $query->whereRaw('LOWER(nombre) LIKE ?', ['%' . strtolower($request->buscar) . '%']);
-        }
-
-        $usuarios = $query->get();
-
-        return view('users.index', compact('usuarios'));
-    }
+ 
 
     public function create()
     {
@@ -62,6 +47,9 @@ class UserController extends Controller
             'tipo.in' => 'El tipo debe ser entero o semi.',
         ]);
 
+        $validated['nombre'] = Str::title($validated['nombre']);
+        $validated['apellidos'] = Str::title($validated['apellidos']);
+
         $password = Str::random(10);
 
         $user = User::create([
@@ -70,7 +58,8 @@ class UserController extends Controller
             'password' => Hash::make($password)
         ]);
 
-        $mensaje = "¡Bienvenido a Ludus Alea!\n\nTu contraseña temporal es: $password\n\nPor favor, cámbiala cuanto antes.";
+        $mensaje = "¡Bienvenido a Ludus Alea!\n\nTu correo de acceso es: {$user->email}\nTu contraseña temporal es: $password\n\nPor favor, inicia sesión y cámbiala cuanto antes desde la sección de perfil.";
+
         Mail::to($user->email)->send(new GenericMail('Bienvenido a Ludus Alea', $mensaje));
 
         return redirect()->route('home');
@@ -85,75 +74,70 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-  public function update(Request $request, User $user)
+    public function update(Request $request, User $user)
     {
-    if (!Gate::allows('update', $user)) {
-        return redirect()->route('acceso.denegado');
-     }
+        if (!Gate::allows('update', $user)) {
+            return redirect()->route('acceso.denegado');
+        }
 
-    $isAdmin = auth()->user()->rol === 'admin';
+        $isAdmin = auth()->user()->rol === 'admin';
 
-    
-    $validated = $request->validate(
-        $isAdmin
-            ? [
-                'nombre' => ['required'],
-                'apellidos' => ['required'],
-                'email' => ['required', 'email', 'unique:users,email,' . $user->id],
-                'rol' => ['required', 'in:admin,tesorero,normal'],
-                'tipo' => ['required', 'in:entero,semi'],
-                'password' => ['nullable', 'confirmed', 'min:6'],
-            ]
-            : [
-                'email' => ['required', 'email', 'unique:users,email,' . $user->id],
-                'password' => ['nullable', 'confirmed', 'min:6'],
-            ],
+        $validated = $request->validate(
+            $isAdmin
+                ? [
+                    'nombre' => ['required'],
+                    'apellidos' => ['required'],
+                    'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+                    'rol' => ['required', 'in:admin,tesorero,normal'],
+                    'tipo' => ['required', 'in:entero,semi'],
+                    'password' => ['nullable', 'confirmed', 'min:6'],
+                ]
+                : [
+                    'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+                    'password' => ['nullable', 'confirmed', 'min:6'],
+                ],
             [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'apellidos.required' => 'Los apellidos son obligatorios.',
-            'email.required' => 'El correo electrónico es obligatorio.',
-            'email.email' => 'El correo electrónico no tiene un formato válido.',
-            'email.unique' => 'Ya existe otro usuario con ese correo.',
-            'rol.required' => 'El rol del usuario es obligatorio.',
-            'rol.in' => 'El rol debe ser admin, tesorero o normal.',
-            'tipo.required' => 'El tipo de usuario es obligatorio.',
-            'tipo.in' => 'El tipo debe ser entero o semi.',
-            'password.confirmed' => 'Las contraseñas no coinciden.',
-            'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+                'nombre.required' => 'El nombre es obligatorio.',
+                'apellidos.required' => 'Los apellidos son obligatorios.',
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.email' => 'El correo electrónico no tiene un formato válido.',
+                'email.unique' => 'Ya existe otro usuario con ese correo.',
+                'rol.required' => 'El rol del usuario es obligatorio.',
+                'rol.in' => 'El rol debe ser admin, tesorero o normal.',
+                'tipo.required' => 'El tipo de usuario es obligatorio.',
+                'tipo.in' => 'El tipo debe ser entero o semi.',
+                'password.confirmed' => 'Las contraseñas no coinciden.',
+                'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
             ]
         );
 
-    
-    $user->email = $validated['email'];
+        $user->email = $validated['email'];
 
-    if (!empty($validated['password'])) {
-        $user->password = Hash::make($validated['password']);
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
+
+        if ($isAdmin) {
+            $user->nombre = Str::title($validated['nombre']);
+            $user->apellidos = Str::title($validated['apellidos']);
+            $user->rol = $validated['rol'];
+            $user->tipo = $validated['tipo'];
+            $user->activo = $request->has('activo');
+        }
+
+        $user->save();
+
+        return redirect()->route('home');
     }
-
-    
-    if ($isAdmin) {
-        $user->nombre = $validated['nombre'];
-        $user->apellidos = $validated['apellidos'];
-        $user->rol = $validated['rol'];
-        $user->tipo = $validated['tipo'];
-        $user->activo = $request->has('activo');
-    }
-
-    $user->save();
-
-    return redirect()->route('home');
-    }
-
 
     public function destroy(User $user)
-{
-    if (!Gate::allows('delete', $user)) {
-        return redirect()->route('acceso.denegado');
+    {
+        if (!Gate::allows('delete', $user)) {
+            return redirect()->route('acceso.denegado');
+        }
+
+        $user->delete();
+
+        return redirect()->route('home')->with('success', 'Usuario eliminado correctamente.');
     }
-
-    $user->delete();
-
-    return redirect()->route('home')->with('success', 'Usuario eliminado correctamente.');
-}
-
 }

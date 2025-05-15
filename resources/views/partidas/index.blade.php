@@ -27,19 +27,29 @@
                         <th class="p-4 text-left">Nombre</th>
                         <th class="p-4 text-left">Juego</th>
                         <th class="p-4 text-left">Fecha</th>
+                        <th class="p-4 text-left">Descripción</th>
+                        <th class="p-4 text-left">Jugadores</th>
                         <th class="p-4 text-left">Acción</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($partidas as $partida)
+                        @php
+                            $jugadoresActuales = $partida->jugadores->count(); 
+                            $jugadoresDisponibles = $partida->max_jugadores - $jugadoresActuales; 
+                        @endphp
                         <tr class="hover:bg-[#f6d6ba]/60 transition">
                             <td class="p-4">{{ $partida->nombre }}</td>
                             <td class="p-4">{{ $partida->juego->nombre }}</td>
                             <td class="p-4">{{ $partida->fecha->format('d/m/Y H:i') }}</td>
+                            <td class="p-4">{{ $partida->descripcion }}</td>
+                            <td class="p-4">
+                                {{ $jugadoresActuales }} / {{ $partida->max_jugadores }} ({{ $jugadoresDisponibles }} disponibles)
+                            </td>
                             <td class="p-4">
                                 <form method="POST" action="{{ route('partidas.join', $partida) }}">
                                     @csrf
-                                    <button id="submit-btn" type="submit"
+                                    <button type="submit"
                                         class="bg-[#2e2d55] hover:bg-[#1f1e3d] text-white px-3 py-1 rounded shadow text-xs">
                                         Unirse
                                     </button>

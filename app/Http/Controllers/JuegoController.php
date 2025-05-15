@@ -6,18 +6,11 @@ use App\Models\Juego;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class JuegoController extends Controller
 {
-    public function index()
-    {
-        if (!Gate::allows('viewAny', Juego::class)) {
-            return redirect()->route('acceso.denegado');
-        }
-
-        $juegos = Juego::all();
-        return view('juegos.index', compact('juegos'));
-    }
+  
 
     public function create()
     {
@@ -36,23 +29,27 @@ class JuegoController extends Controller
         }
 
         $validated = $request->validate([
-            'nombre' => 'required',
-            'min_jugadores' => 'required|integer|min:1',
-            'max_jugadores' => 'required|integer|gte:min_jugadores',
+            'nombre' => 'required|string|max:255',
+            'tipo' => 'required|in:Juego de mesa,Manual de rol',
+            'genero' => 'required|string|max:255',
+            'edad' => 'required|integer|min:0',
             'user_id' => 'required|exists:users,id',
         ], [
             'nombre.required' => 'El nombre del juego es obligatorio.',
-            'nombre.max' => 'El nombre del juego no puede superar los 255 caracteres.',
-            'min_jugadores.required' => 'Debes indicar el número mínimo de jugadores.',
-            'min_jugadores.integer' => 'El mínimo de jugadores debe ser un número entero.',
-            'min_jugadores.min' => 'Debe haber al menos un jugador mínimo.',
-            'max_jugadores.required' => 'Debes indicar el número máximo de jugadores.',
-            'max_jugadores.integer' => 'El máximo de jugadores debe ser un número entero.',
-            'max_jugadores.gte' => 'El número máximo debe ser mayor o igual al mínimo.',
+            'nombre.max' => 'El nombre no puede superar los 255 caracteres.',
+            'tipo.required' => 'El tipo de juego es obligatorio.',
+            'tipo.in' => 'El tipo debe ser "Juego de mesa" o "Manual de rol".',
+            'genero.required' => 'El género es obligatorio.',
+            'genero.max' => 'El género no puede superar los 255 caracteres.',
+            'edad.required' => 'La edad recomendada es obligatoria.',
+            'edad.integer' => 'La edad debe ser un número.',
+            'edad.min' => 'La edad debe ser al menos 0.',
             'user_id.required' => 'Debes asignar un responsable del juego.',
             'user_id.exists' => 'El usuario seleccionado no es válido.',
         ]);
 
+        $validated['nombre'] = Str::title($validated['nombre']);
+        $validated['genero'] = Str::title($validated['genero']);
         Juego::create($validated);
         return redirect()->route('home');
     }
@@ -74,23 +71,27 @@ class JuegoController extends Controller
         }
 
         $validated = $request->validate([
-            'nombre' => 'required',
-            'min_jugadores' => 'required|integer|min:1',
-            'max_jugadores' => 'required|integer|gte:min_jugadores',
+            'nombre' => 'required|string|max:255',
+            'tipo' => 'required|in:Juego de mesa,Manual de rol',
+            'genero' => 'required|string|max:255',
+            'edad' => 'required|integer|min:0',
             'user_id' => 'required|exists:users,id',
         ], [
             'nombre.required' => 'El nombre del juego es obligatorio.',
-            'nombre.max' => 'El nombre del juego no puede superar los 255 caracteres.',
-            'min_jugadores.required' => 'Debes indicar el número mínimo de jugadores.',
-            'min_jugadores.integer' => 'El mínimo de jugadores debe ser un número entero.',
-            'min_jugadores.min' => 'Debe haber al menos un jugador mínimo.',
-            'max_jugadores.required' => 'Debes indicar el número máximo de jugadores.',
-            'max_jugadores.integer' => 'El máximo de jugadores debe ser un número entero.',
-            'max_jugadores.gte' => 'El número máximo debe ser mayor o igual al mínimo.',
+            'nombre.max' => 'El nombre no puede superar los 255 caracteres.',
+            'tipo.required' => 'El tipo de juego es obligatorio.',
+            'tipo.in' => 'El tipo debe ser "Juego de mesa" o "Manual de rol".',
+            'genero.required' => 'El género es obligatorio.',
+            'genero.max' => 'El género no puede superar los 255 caracteres.',
+            'edad.required' => 'La edad recomendada es obligatoria.',
+            'edad.integer' => 'La edad debe ser un número.',
+            'edad.min' => 'La edad debe ser al menos 0.',
             'user_id.required' => 'Debes asignar un responsable del juego.',
             'user_id.exists' => 'El usuario seleccionado no es válido.',
         ]);
 
+        $validated['nombre'] = Str::title($validated['nombre']);
+        $validated['genero'] = Str::title($validated['genero']);
         $juego->update($validated);
         return redirect()->route('home');
     }

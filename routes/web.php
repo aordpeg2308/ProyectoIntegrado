@@ -18,7 +18,7 @@ Route::post('/login', [SessionController::class, 'store']);
 Route::post('/logout', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
 
 
-Route::get('/usuarios', [UserController::class, 'index'])->middleware('can:viewAny,App\Models\User')->name('users.index');
+
 Route::get('/usuarios/create', [UserController::class, 'create'])->middleware('can:create,App\Models\User')->name('users.create');
 Route::post('/usuarios', [UserController::class, 'store'])->middleware('can:create,App\Models\User')->name('users.store');
 Route::get('/user/{user}/edit', [UserController::class, 'edit'])->middleware('can:update,user')->name('users.edit');
@@ -27,7 +27,7 @@ Route::delete('/user/{user}', [UserController::class, 'destroy'])->middleware('c
 
 
 
-Route::get('/juegos', [JuegoController::class, 'index'])->middleware('can:viewAny,App\Models\Juego')->name('juegos.index');
+
 Route::get('/juegos/create', [JuegoController::class, 'create'])->middleware('can:create,App\Models\Juego')->name('juegos.create');
 Route::post('/juegos', [JuegoController::class, 'store'])->middleware('can:create,App\Models\Juego')->name('juegos.store');
 Route::get('/juegos/{juego}/edit', [JuegoController::class, 'edit'])->middleware('can:update,juego')->name('juegos.edit');
@@ -51,7 +51,7 @@ Route::post('/partidas/{partida}/leave', [PartidaController::class, 'leave'])->m
 
 Route::get('/pagos/create', [PagoController::class, 'create'])->middleware('can:create,App\Models\Pago')->name('pagos.create');
 Route::post('/pagos', [PagoController::class, 'store'])->middleware('can:create,App\Models\Pago')->name('pagos.store');
-Route::get('/pagos', [PagoController::class, 'index'])->middleware('auth')->name('pagos.index');
+
 
 Route::get('/acceso-denegado', function () {
     return view('errors.denegado');

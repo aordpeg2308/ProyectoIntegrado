@@ -14,7 +14,7 @@
         </div>
     </form>
 
-   <div class="bg-[#f6d6ba]/80 rounded-xl shadow-lg overflow-x-auto w-full">
+    <div class="bg-[#f6d6ba]/80 rounded-xl shadow-lg overflow-x-auto w-full">
 
         @if ($partidasParticipadas->isEmpty())
             <p class="text-center p-6 text-lg font-semibold">No estás participando en ninguna partida.</p>
@@ -25,15 +25,21 @@
                         <th class="p-4 text-left">Nombre</th>
                         <th class="p-4 text-left">Juego</th>
                         <th class="p-4 text-left">Fecha</th>
+                        <th class="p-4 text-left">Jugadores</th>
                         <th class="p-4 text-left">Acción</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($partidasParticipadas as $partida)
+                        @php
+                            $jugadoresActuales = $partida->jugadores->count(); // Cuenta los jugadores en la partida
+                            $jugadoresDisponibles = $partida->max_jugadores - $jugadoresActuales; // Calcula los disponibles
+                        @endphp
                         <tr class="hover:bg-[#f6d6ba]/60 transition">
                             <td class="p-4">{{ $partida->nombre }}</td>
                             <td class="p-4">{{ $partida->juego->nombre }}</td>
                             <td class="p-4">{{ $partida->fecha }}</td>
+                            <td class="p-4">{{ $jugadoresActuales }} / {{ $partida->max_jugadores }} ({{ $jugadoresDisponibles }} disponibles)</td>
                             <td class="p-4">
                                 <form method="POST" action="{{ route('partidas.leave', $partida) }}"
                                     onsubmit="return confirm('¿Seguro que quieres salir de esta partida?')">

@@ -15,6 +15,9 @@ class Partida extends Model
         'juego_id',
         'creador_id',
         'fecha',
+        'min_jugadores',
+        'max_jugadores',
+        'descripcion',
     ];
 
     public function juego()
@@ -36,7 +39,7 @@ class Partida extends Model
     {
         return Attribute::make(
             get: fn($value) => \Carbon\Carbon::parse($value),
-            set: fn($value) => $value // no lo toques al guardar
+            set: fn($value) => $value
         );
     }
 }

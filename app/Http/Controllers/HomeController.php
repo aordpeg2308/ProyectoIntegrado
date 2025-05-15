@@ -25,7 +25,7 @@ class HomeController extends Controller
         $user = auth()->user();
 
         if ($user) {
-           
+
             if (Gate::allows('viewAny', User::class)) {
                 $query = User::query()->where('id', '!=', $user->id);
 
@@ -40,7 +40,6 @@ class HomeController extends Controller
                 $usuarios = $query->get();
             }
 
-            
             if (Gate::allows('viewAny', Juego::class)) {
                 $query = Juego::query();
 
@@ -51,7 +50,6 @@ class HomeController extends Controller
                 $juegos = $query->get();
             }
 
-            
             $query = Partida::where('creador_id', $user->id);
 
             if ($request->filled('buscar_organizadas')) {
@@ -60,7 +58,6 @@ class HomeController extends Controller
 
             $partidasOrganizadas = $query->get();
 
-            
             $query = $user->partidas()->where('creador_id', '!=', $user->id);
 
             if ($request->filled('buscar_participadas')) {
@@ -69,7 +66,6 @@ class HomeController extends Controller
 
             $partidasParticipadas = $query->get();
 
-            
             if (Gate::allows('viewAny', Pago::class)) {
                 $pagos = Pago::with('user')->latest()->take(5)->get();
 
@@ -83,45 +79,39 @@ class HomeController extends Controller
                         });
                     });
 
-                
                 $proximosPagos = User::where('activo', true)->get()->map(function ($user) {
-                    $pagos = $user->pagos;
-                    $multiplo = $user->tipo === 'semi' ? 10 : 25;
-                    $mesActual = now()->month;
+                    $pagos = $user->pagos()->orderBy('fecha', 'asc')->get();
 
                     if ($pagos->isEmpty()) {
                         return [
                             'nombre' => $user->nombre,
                             'tipo' => $user->tipo,
                             'estado_pago' => 'pendiente',
-                            'mensaje' => "Debe {$mesActual} " . ($mesActual === 1 ? 'mes' : 'meses'),
+                            'mensaje' => 'No hay pagos registrados.',
                         ];
                     }
 
-                    $ultimoPago = $pagos->sortByDesc('fecha')->first();
-                    $mesUltimoPago = Carbon::parse($ultimoPago->fecha)->month;
+                    $multiplo = $user->tipo === 'semi' ? 10 : 25;
+                    $totalPagado = $pagos->sum('cantidad');
+                    $mesesPagados = $totalPagado / $multiplo;
 
-                    if ($mesUltimoPago === $mesActual) {
-                        $totalCantidad = $pagos->sum('cantidad');
-                        $totalMeses = $totalCantidad / $multiplo;
-                        $fechaBase = $pagos->sortBy('fecha')->first()->fecha;
-                        $proximoPago = Carbon::parse($fechaBase)->addMonths($totalMeses);
+                    $fechaUltimoPago = $pagos->last()->fecha;
+                    $proximoPago = Carbon::parse($fechaUltimoPago)->addMonths($mesesPagados);
 
+                    if ($proximoPago->isPast()) {
                         return [
                             'nombre' => $user->nombre,
                             'tipo' => $user->tipo,
-                            'estado_pago' => 'ok',
-                            'proximo_pago' => $proximoPago,
+                            'estado_pago' => 'pendiente',
+                            'mensaje' => 'Pago vencido desde el ' . $proximoPago->format('d/m/Y'),
                         ];
                     }
-
-                    $mesesDebidos = $mesActual - $mesUltimoPago;
 
                     return [
                         'nombre' => $user->nombre,
                         'tipo' => $user->tipo,
-                        'estado_pago' => 'pendiente',
-                        'mensaje' => "Debe {$mesesDebidos} " . ($mesesDebidos === 1 ? 'mes' : 'meses'),
+                        'estado_pago' => 'ok',
+                        'proximo_pago' => $proximoPago,
                     ];
                 });
             }

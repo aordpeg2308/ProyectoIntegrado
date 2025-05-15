@@ -8,7 +8,6 @@
         <form action="{{ route('partidas.store') }}" method="POST" novalidate>
             @csrf
 
-          
             <div class="mb-4">
                 <label for="nombre" class="block text-[#2e2d55] font-semibold mb-2">Nombre de la partida</label>
                 <input type="text" name="nombre" id="nombre"
@@ -19,7 +18,6 @@
                 @enderror
             </div>
 
-            
             <div class="mb-4">
                 <label for="juego_id" class="block text-[#2e2d55] font-semibold mb-2">Juego</label>
                 <select name="juego_id" id="juego_id"
@@ -36,13 +34,42 @@
                 @enderror
             </div>
 
-           
-            <div class="mb-6">
+            <div class="mb-4">
                 <label for="fecha" class="block text-[#2e2d55] font-semibold mb-2">Fecha</label>
                 <input type="datetime-local" name="fecha" id="fecha"
                     class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f49d6e]"
                     value="{{ old('fecha') }}">
                 @error('fecha')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="min_jugadores" class="block text-[#2e2d55] font-semibold mb-2">Mínimo de jugadores</label>
+                <input type="number" name="min_jugadores" id="min_jugadores" min="1"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f49d6e]"
+                    value="{{ old('min_jugadores') }}">
+                @error('min_jugadores')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="max_jugadores" class="block text-[#2e2d55] font-semibold mb-2">Máximo de jugadores</label>
+                <input type="number" name="max_jugadores" id="max_jugadores" min="1"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f49d6e]"
+                    value="{{ old('max_jugadores') }}">
+                @error('max_jugadores')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-6">
+                <label for="descripcion" class="block text-[#2e2d55] font-semibold mb-2">Descripción</label>
+                <textarea name="descripcion" id="descripcion" rows="4"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f49d6e]"
+                    placeholder="Introduce una descripción detallada">{{ old('descripcion') }}</textarea>
+                @error('descripcion')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

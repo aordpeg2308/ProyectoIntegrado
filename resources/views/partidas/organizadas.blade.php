@@ -25,15 +25,21 @@
                         <th class="p-4 text-left">Nombre</th>
                         <th class="p-4 text-left">Juego</th>
                         <th class="p-4 text-left">Fecha</th>
+                        <th class="p-4 text-left">Jugadores</th>
                         <th class="p-4 text-left">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($partidasOrganizadas as $partida)
+                        @php
+                            $jugadoresActuales = $partida->jugadores->count(); // Cuenta los jugadores en la partida
+                            $jugadoresDisponibles = $partida->max_jugadores - $jugadoresActuales; // Calcula los disponibles
+                        @endphp
                         <tr class="hover:bg-[#f6d6ba]/60 transition">
                             <td class="p-4">{{ $partida->nombre }}</td>
                             <td class="p-4">{{ $partida->juego->nombre }}</td>
                             <td class="p-4">{{ $partida->fecha }}</td>
+                            <td class="p-4">{{ $jugadoresActuales }} / {{ $partida->max_jugadores }} ({{ $jugadoresDisponibles }} disponibles)</td>
                             <td class="p-4 flex gap-2">
                                 <a href="{{ route('partidas.edit', $partida) }}"
                                     class="bg-[#f49d6e] hover:bg-[#e88b5b] text-white px-3 py-1 rounded shadow text-xs">Editar</a>

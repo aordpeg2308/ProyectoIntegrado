@@ -9,14 +9,12 @@
             @csrf
             @method('PATCH')
 
-           
             <div class="mb-4">
                 <label class="block text-[#2e2d55] font-semibold mb-2">Nombre</label>
                 <input type="text" value="{{ $partida->nombre }}" readonly
                     class="w-full px-4 py-2 bg-gray-100 border rounded-lg cursor-not-allowed">
             </div>
 
-            
             <div class="mb-6">
                 <label for="fecha" class="block text-[#2e2d55] font-semibold mb-2">Nueva fecha</label>
                 <input type="datetime-local" name="fecha" id="fecha"
@@ -27,7 +25,7 @@
                 @enderror
             </div>
 
-            <button type="submit" id="submit-btn"
+            <button type="submit"
                 class="w-full bg-[#2e2d55] text-white py-2 rounded-lg font-semibold hover:bg-[#1f1e3d] transition">
                 Actualizar partida
             </button>

@@ -11,8 +11,9 @@ class Juego extends Model
 
     protected $fillable = [
         'nombre',
-        'min_jugadores',
-        'max_jugadores',
+        'tipo',
+        'genero',
+        'edad',
         'user_id',
     ];
 
@@ -22,7 +23,7 @@ class Juego extends Model
     }
 
     public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    {
+        return $this->belongsTo(User::class);
+    }
 }

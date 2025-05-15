@@ -22,8 +22,9 @@
                 <thead class="bg-[#2e2d55] text-white">
                     <tr>
                         <th class="p-4 text-left">Nombre</th>
-                        <th class="p-4 text-left">Mín. Jugadores</th>
-                        <th class="p-4 text-left">Máx. Jugadores</th>
+                        <th class="p-4 text-left">Tipo</th>
+                        <th class="p-4 text-left">Género</th>
+                        <th class="p-4 text-left">Edad</th>
                         <th class="p-4 text-left">Dueño</th>
                         <th class="p-4 text-left">Acciones</th>
                     </tr>
@@ -32,11 +33,10 @@
                     @foreach ($juegos as $juego)
                         <tr class="hover:bg-[#f6d6ba]/60 transition">
                             <td class="p-4">{{ $juego->nombre }}</td>
-                            <td class="p-4">{{ $juego->min_jugadores }}</td>
-                            <td class="p-4">{{ $juego->max_jugadores }}</td>
-                            <td class="p-4">
-                                {{ $juego->user->nombre }} {{$juego->user->apellidos  }}
-                            </td>
+                            <td class="p-4">{{ $juego->tipo }}</td>
+                            <td class="p-4">{{ $juego->genero }}</td>
+                            <td class="p-4">{{ $juego->edad }}+</td>
+                            <td class="p-4">{{ $juego->user->nombre }} {{ $juego->user->apellidos }}</td>
                             <td class="p-4">
                                 <div class="flex gap-2">
                                     @can('update', $juego)
