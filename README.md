@@ -100,6 +100,7 @@ cd ludus-alea
        - Contraseña: 123456 
     
 2. **Vista de cuenta  Administrador**
+
     -  Home Vacio:
 
     ![Home Admin](readme-img/adminVacio.png)
@@ -119,7 +120,8 @@ cd ludus-alea
 
     ![Editar como Admin](readme-img/editarUsuarioAdmin.png)
 
-    2. **Vista de cuenta  Tesorero**
+3. **Vista de cuenta  Tesorero**
+
     - Home: 
 
     ![Home Tesorero](readme-img/menuTesorero.png)
@@ -132,13 +134,13 @@ cd ludus-alea
 
     ![Listar Pago](readme-img/pagosxcliente.png)
 
-    3. **Vista como usuario Normal**
+4. **Vista como usuario Normal**
 
     - Home: 
 
     ![Home normal](readme-img/menuNormal.png)
 
-    4. **Funcionalidades de todos los usuarios**
+5. **Funcionalidades de todos los usuarios**
 
     - Crear Partida:
 
