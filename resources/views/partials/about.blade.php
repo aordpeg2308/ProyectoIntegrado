@@ -90,14 +90,32 @@
                                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                             </span>
                         </summary>
-                        <div class="mt-3">
-                            <div class="rounded-xl overflow-hidden shadow-md aspect-video">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3189.3008372743843!2d-3.9697605240948985!3d37.7280328167298!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6cfa510bc90b8f%3A0x9d94cb2081322b08!2sC.%20Campi%C3%B1a%2C%2066%2C%2023600%20Martos%2C%20Ja%C3%A9n!5e0!3m2!1ses!2ses!4v1715581845346!5m2!1ses!2ses"
-                                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy">
-                                </iframe>
+                        <div x-data="{ showMap: false }" class="mt-3">
+                    <div class="hidden md:block rounded-xl overflow-hidden shadow-md aspect-video">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3189.3008372743843!2d-3.9697605240948985!3d37.7280328167298!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6cfa510bc90b8f%3A0x9d94cb2081322b08!2sC.%20Campi%C3%B1a%2C%2066%2C%2023600%20Martos%2C%20Ja%C3%A9n!5e0!3m2!1ses!2ses!4v1715581845346!5m2!1ses!2ses""
+                            width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+
+                        <div class="md:hidden">
+                            <button @click="showMap = true" class="bg-[#2e2d55] text-white px-4 py-2 rounded-lg hover:bg-[#f49d6e] transition">
+                                    Ver mapa
+                                </button>
+
+                                <div x-show="showMap" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+                                    <div class="bg-white w-11/12 max-w-lg p-4 rounded-lg shadow-lg relative">
+                                        <button @click="showMap = false" class="absolute top-2 right-2 text-[#2e2d55] font-bold text-xl">&times;</button>
+                                        <div class="aspect-video">
+                                            <iframe
+                                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3189.3008372743843!2d-3.9697605240948985!3d37.7280328167298!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6cfa510bc90b8f%3A0x9d94cb2081322b08!2sC.%20Campi%C3%B1a%2C%2066%2C%2023600%20Martos%2C%20Ja%C3%A9n!5e0!3m2!1ses!2ses!4v1715581845346!5m2!1ses!2ses"
+                                                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                                            </iframe>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                    </div>
                     </details>
                 </div>
 
