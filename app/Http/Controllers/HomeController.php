@@ -114,6 +114,12 @@ class HomeController extends Controller
                         'proximo_pago' => $proximoPago,
                     ];
                 });
+
+                if ($request->filled('buscar_pago_usuario')) {
+                    $proximosPagos = $proximosPagos->filter(function ($p) use ($request) {
+                        return str_contains(strtolower($p['nombre']), strtolower($request->buscar_pago_usuario));
+                    });
+                }
             }
         }
 
