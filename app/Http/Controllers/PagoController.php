@@ -75,4 +75,25 @@ class PagoController extends Controller
 
     return redirect()->route('home');
 }
+
+public function porCliente(User $user)
+{
+    if (!Gate::allows('viewAny', Pago::class)) {
+        return redirect()->route('acceso.denegado');
+    }
+
+    $pagos = $user->pagos()->orderBy('fecha', 'desc')->get();
+    return view('pagos.por_cliente', compact('user', 'pagos'));
+}
+
+public function destroy(Pago $pago)
+{
+    if (!Gate::allows('viewAny', Pago::class)) {
+        return redirect()->route('acceso.denegado');
+    }
+
+    $pago->delete();
+    return back();
+}
+
 }

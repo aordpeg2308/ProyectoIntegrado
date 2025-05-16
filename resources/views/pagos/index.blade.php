@@ -7,6 +7,7 @@
                 <th class="p-4 text-left">Nombre</th>
                 <th class="p-4 text-left">Tipo</th>
                 <th class="p-4 text-left">Estado</th>
+                <th class="p-4 text-left">Acciones</th>
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -23,6 +24,17 @@
                             <span class="text-red-600 font-semibold">
                                 {{ $pago['mensaje'] }}
                             </span>
+                        @endif
+                    </td>
+                    <td class="p-4">
+                        @php
+                            $usuario = \App\Models\User::where('nombre', $pago['nombre'])->first();
+                        @endphp
+                        @if($usuario)
+                            <a href="{{ route('pagos.porCliente', $usuario->id) }}"
+                               class="bg-[#2e2d55] text-white px-3 py-1 rounded hover:bg-[#f49d6e] transition">
+                                Ver pagos
+                            </a>
                         @endif
                     </td>
                 </tr>

@@ -51,6 +51,8 @@ Route::post('/partidas/{partida}/leave', [PartidaController::class, 'leave'])->m
 
 Route::get('/pagos/create', [PagoController::class, 'create'])->middleware('can:create,App\Models\Pago')->name('pagos.create');
 Route::post('/pagos', [PagoController::class, 'store'])->middleware('can:create,App\Models\Pago')->name('pagos.store');
+Route::get('/pagos/cliente/{user}', [PagoController::class, 'porCliente'])->name('pagos.porCliente');
+Route::delete('/pagos/{pago}', [PagoController::class, 'destroy'])->name('pagos.destroy');
 
 
 Route::get('/acceso-denegado', function () {

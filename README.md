@@ -128,6 +128,10 @@ cd ludus-alea
 
     ![Crear Pago](readme-img/crearPago.png)
 
+    - Todos los pagos de un usuario 
+
+    ![Listar Pago](readme-img/pagosxcliente.png)
+
     3. **Vista como usuario Normal**
 
     - Home: 
