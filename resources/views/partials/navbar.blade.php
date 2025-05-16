@@ -6,7 +6,10 @@
 <nav x-data="{ open: false }" class="bg-slate-700 px-6 py-4">
     <div class="flex items-center justify-between">
         <a href="{{ route('home') }}">
-            <img src="{{ asset('logo.png') }}" alt="Ludus Alea" class="h-20">
+            <div class="relative w-20 h-20">
+                <div class="absolute inset-0 rounded-full bg-white/70 blur-sm z-0"></div>
+                <img src="{{ asset('logo.png') }}" alt="Ludus Alea" class="relative z-10 w-20 h-20 object-contain">
+            </div>
         </a>
 
         <button @click="open = !open" class="text-white md:hidden focus:outline-none">
