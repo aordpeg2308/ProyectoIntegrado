@@ -17,7 +17,6 @@ class HomeController extends Controller
         $usuarios = collect();
         $juegos = collect();
         $pagos = collect();
-        $grafica = collect();
         $partidasOrganizadas = collect();
         $partidasParticipadas = collect();
         $proximosPagos = collect();
@@ -25,7 +24,6 @@ class HomeController extends Controller
         $user = auth()->user();
 
         if ($user) {
-
             if (Gate::allows('viewAny', User::class)) {
                 $query = User::query()->where('id', '!=', $user->id);
 
@@ -68,16 +66,6 @@ class HomeController extends Controller
 
             if (Gate::allows('viewAny', Pago::class)) {
                 $pagos = Pago::with('user')->latest()->take(5)->get();
-
-                $grafica = Pago::with('user')->get()
-                    ->groupBy(fn($pago) => Carbon::parse($pago->fecha)->format('Y-m'))
-                    ->map(function ($pagosMes) {
-                        return $pagosMes->groupBy('user_id')->map(function ($pagosUsuario) {
-                            $usuario = $pagosUsuario->first()->user;
-                            $multiplo = $usuario->tipo === 'semi' ? 10 : 25;
-                            return $pagosUsuario->sum('cantidad') / $multiplo;
-                        });
-                    });
 
                 $proximosPagos = User::where('activo', true)->get()->map(function ($user) {
                     $pagos = $user->pagos()->orderBy('fecha', 'asc')->get();
@@ -127,7 +115,6 @@ class HomeController extends Controller
             'usuarios',
             'juegos',
             'pagos',
-            'grafica',
             'partidasOrganizadas',
             'partidasParticipadas',
             'proximosPagos'
