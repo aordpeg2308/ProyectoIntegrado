@@ -34,8 +34,8 @@
 
         @yield('content')
     </main>
-<footer class=" bg-slate-700 text-[#f49d6e] py-6 relative z-10 px-6">
-    <div class="flex items-center justify-between w-full max-w-7xl mx-auto relative">
+<footer class="bg-slate-700 text-[#f49d6e] py-6 relative z-10 px-6">
+    <div class="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         
         <div class="flex items-center space-x-2">
             <span class="text-sm">¡Síguenos!</span>
@@ -46,13 +46,9 @@
             </a>
         </div>
 
-        
-        <p class="absolute left-1/2 -translate-x-1/2 text-sm text-gray-300 text-center">
+        <p class="text-sm text-gray-300 text-center md:text-right">
             &copy; {{ date('Y') }} Ludus Alea. Todos los derechos reservados.
         </p>
-
-        
-        <div class="w-120"></div>
     </div>
 </footer>
 
