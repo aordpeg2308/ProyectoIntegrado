@@ -47,12 +47,12 @@ class UserController extends Controller
 
         $validated['nombre'] = Str::title($validated['nombre']);
         $validated['apellidos'] = Str::title($validated['apellidos']);
-
         $password = Str::random(10);
 
         $user = User::create([
             ...$validated,
             'activo' => true,
+            'quiere_correos' => true,
             'password' => Hash::make($password)
         ]);
 
@@ -124,6 +124,8 @@ class UserController extends Controller
             if (auth()->id() !== $user->id) {
                 $user->activo = $request->boolean('activo');
             }
+
+            $user->quiere_correos = $request->boolean('quiere_correos');
         }
 
         $user->save();

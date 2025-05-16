@@ -90,7 +90,12 @@ cd ludus-alea
 
   ##  💻 Funcionamiento      
 
-  1. **Inicio de  Sesion**
+  1. **Vista de persona no logeada**
+        
+        - Home o página About
+        ![Home About](readme-img/paginaPrincipalSinLogin.png)
+
+        - Login
 
 ![Pantalla de login](readme-img/login.png)
         

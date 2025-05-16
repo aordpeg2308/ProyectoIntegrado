@@ -23,6 +23,8 @@ return new class extends Migration
             $table->boolean('activo')->default(true);
             $table->rememberToken();
             $table->timestamps();
+            $table->boolean('quiere_correos')->default(true);
+
 
         });
 

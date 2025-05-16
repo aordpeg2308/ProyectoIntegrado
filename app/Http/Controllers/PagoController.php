@@ -15,11 +15,6 @@ use Carbon\Carbon;
 class PagoController extends Controller
 {
   
-
-
-
-
-
     public function create()
     {
         if (!Gate::allows('create', Pago::class)) {

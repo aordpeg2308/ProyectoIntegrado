@@ -3,7 +3,7 @@
 @section('content')
 <div class="flex items-center justify-center py-12">
     <div class="bg-[#f6d6ba]/80 shadow-lg rounded-xl p-8 w-full max-w-lg">
-        <h2 class="text-2xl font-bold text-center text-[#2e2d55] mb-6">Crear nuevo juego</h2>
+        <h2 class="text-2xl font-bold text-center text-[#2e2d55] mb-6">Añadir nuevo juego</h2>
 
         <form action="{{ route('juegos.store') }}" method="POST" novalidate>
             @csrf

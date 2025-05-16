@@ -23,6 +23,7 @@ class PartidaController extends Controller
             ->whereDoesntHave('jugadores', fn($q) => $q->where('user_id', $user->id))
             ->where('creador_id', '!=', $user->id)
             ->whereHas('creador', fn($q) => $q->where('activo', true))
+            ->orderBy('fecha')
             ->get()
             ->filter(fn($p) => $p->jugadores->count() < $p->max_jugadores);
 
@@ -34,6 +35,7 @@ class PartidaController extends Controller
 
         return view('partidas.index', compact('partidas'));
     }
+
 
     public function creadas()
     {
@@ -126,6 +128,7 @@ class PartidaController extends Controller
 
         User::where('id', '!=', $creador->id)
             ->where('activo', true)
+            ->where('quiere_correos', true)
             ->each(function ($user) use ($mensajeUsuarios) {
                 Mail::to($user->email)->send(new GenericMail('Nueva partida disponible - Ludus Alea', $mensajeUsuarios));
             });
@@ -162,7 +165,7 @@ class PartidaController extends Controller
         $juego = $partida->juego;
 
         foreach ($partida->jugadores as $jugador) {
-            if ($jugador->id !== $partida->creador_id) {
+            if ($jugador->id !== $partida->creador_id && $jugador->quiere_correos) {
                 Mail::to($jugador->email)->send(
                     new GenericMail(
                         'Cambio de fecha - Ludus Alea',
@@ -186,12 +189,14 @@ class PartidaController extends Controller
         $fecha = $partida->fecha->format('d/m/Y');
 
         foreach ($partida->jugadores as $jugador) {
-            Mail::to($jugador->email)->send(
-                new GenericMail(
-                    'Partida cancelada - Ludus Alea',
-                    "La partida '{$partida->nombre}' del juego '{$juego->nombre}' programada para el día {$fecha}, organizada por {$creador->nombre}, ha sido cancelada."
-                )
-            );
+            if ($jugador->quiere_correos) {
+                Mail::to($jugador->email)->send(
+                    new GenericMail(
+                        'Partida cancelada - Ludus Alea',
+                        "La partida '{$partida->nombre}' del juego '{$juego->nombre}' programada para el día {$fecha}, organizada por {$creador->nombre}, ha sido cancelada."
+                    )
+                );
+            }
         }
 
         $partida->delete();
@@ -209,21 +214,25 @@ class PartidaController extends Controller
             $juego = $partida->juego;
             $creador = $partida->creador;
 
-            Mail::to($jugador->email)->send(
-                new GenericMail(
-                    'Unido a partida - Ludus Alea',
-                    "Te has unido a la partida '{$partida->nombre}' del juego '{$juego->nombre}' el día {$partida->fecha->format('d/m/Y')} organizada por {$creador->nombre}."
-                )
-            );
+            if ($jugador->quiere_correos) {
+                Mail::to($jugador->email)->send(
+                    new GenericMail(
+                        'Unido a partida - Ludus Alea',
+                        "Te has unido a la partida '{$partida->nombre}' del juego '{$juego->nombre}' el día {$partida->fecha->format('d/m/Y')} organizada por {$creador->nombre}."
+                    )
+                );
+            }
 
-            $plazasLibres = $partida->max_jugadores - $partida->jugadores->count() -1;
+            if ($creador->quiere_correos) {
+                $plazasLibres = $partida->max_jugadores - $partida->jugadores->count() - 1;
 
-            Mail::to($creador->email)->send(
-                new GenericMail(
-                    'Nuevo jugador en tu partida - Ludus Alea',
-                    "El usuario {$jugador->nombre} se ha unido a tu partida '{$partida->nombre}'. Quedan {$plazasLibres} plazas libres."
-                )
-            );
+                Mail::to($creador->email)->send(
+                    new GenericMail(
+                        'Nuevo jugador en tu partida - Ludus Alea',
+                        "El usuario {$jugador->nombre} se ha unido a tu partida '{$partida->nombre}'. Quedan {$plazasLibres} plazas libres."
+                    )
+                );
+            }
         }
 
         return redirect()->route('home');
@@ -240,21 +249,25 @@ class PartidaController extends Controller
             $juego = $partida->juego;
             $creador = $partida->creador;
 
-            Mail::to($jugador->email)->send(
-                new GenericMail(
-                    'Salida de partida - Ludus Alea',
-                    "Te has salido de la partida '{$partida->nombre}' del juego '{$juego->nombre}' programada para el día {$partida->fecha->format('d/m/Y')}."
-                )
-            );
+            if ($jugador->quiere_correos) {
+                Mail::to($jugador->email)->send(
+                    new GenericMail(
+                        'Salida de partida - Ludus Alea',
+                        "Te has salido de la partida '{$partida->nombre}' del juego '{$juego->nombre}' programada para el día {$partida->fecha->format('d/m/Y')}."
+                    )
+                );
+            }
 
-            $plazasLibres = $partida->max_jugadores - $partida->jugadores->count() +1;
+            if ($creador->quiere_correos) {
+                $plazasLibres = $partida->max_jugadores - $partida->jugadores->count() + 1;
 
-            Mail::to($creador->email)->send(
-                new GenericMail(
-                    'Jugador se ha salido de tu partida - Ludus Alea',
-                    "El usuario {$jugador->nombre} se ha salido de tu partida '{$partida->nombre}'. Quedan {$plazasLibres} plazas libres."
-                )
-            );
+                Mail::to($creador->email)->send(
+                    new GenericMail(
+                        'Jugador se ha salido de tu partida - Ludus Alea',
+                        "El usuario {$jugador->nombre} se ha salido de tu partida '{$partida->nombre}'. Quedan {$plazasLibres} plazas libres."
+                    )
+                );
+            }
         }
 
         return redirect()->route('home');

@@ -19,6 +19,7 @@ class User extends Authenticatable
         'rol',
         'tipo',
         'activo',
+        'quiere_correos',
     ];
 
     protected $hidden = [

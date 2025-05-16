@@ -37,7 +37,7 @@ class HomeController extends Controller
                     $query->whereRaw('LOWER(nombre) LIKE ?', ['%' . strtolower($request->buscar_usuario) . '%']);
                 }
 
-                $usuarios = $query->get();
+                $usuarios = $query->orderBy('nombre')->get();
             }
 
             if (Gate::allows('viewAny', Juego::class)) {
@@ -47,7 +47,7 @@ class HomeController extends Controller
                     $query->whereRaw('LOWER(nombre) LIKE ?', ['%' . strtolower($request->buscar_juego) . '%']);
                 }
 
-                $juegos = $query->get();
+                $juegos = $query->orderBy('nombre')->get();
             }
 
             $query = Partida::where('creador_id', $user->id);
@@ -56,7 +56,7 @@ class HomeController extends Controller
                 $query->whereRaw('LOWER(nombre) LIKE ?', ['%' . strtolower($request->buscar_organizadas) . '%']);
             }
 
-            $partidasOrganizadas = $query->get();
+            $partidasOrganizadas = $query->orderBy('fecha')->get();
 
             $query = $user->partidas()->where('creador_id', '!=', $user->id);
 
@@ -64,7 +64,7 @@ class HomeController extends Controller
                 $query->whereRaw('LOWER(nombre) LIKE ?', ['%' . strtolower($request->buscar_participadas) . '%']);
             }
 
-            $partidasParticipadas = $query->get();
+            $partidasParticipadas = $query->orderBy('fecha')->get();
 
             if (Gate::allows('viewAny', Pago::class)) {
                 $pagos = Pago::with('user')->latest()->take(5)->get();
@@ -95,8 +95,8 @@ class HomeController extends Controller
                     $totalPagado = $pagos->sum('cantidad');
                     $mesesPagados = $totalPagado / $multiplo;
 
-                    $fechaUltimoPago = $pagos->last()->fecha;
-                    $proximoPago = Carbon::parse($fechaUltimoPago)->addMonths($mesesPagados);
+                    $fechaPrimerPago = $pagos->first()->fecha;
+                    $proximoPago = Carbon::parse($fechaPrimerPago)->addMonths($mesesPagados);
 
                     if ($proximoPago->isPast()) {
                         return [

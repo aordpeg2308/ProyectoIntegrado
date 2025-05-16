@@ -95,6 +95,12 @@
                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f49d6e]"
                         placeholder="Confirma la nueva contraseña">
                 </div>
+                <div class="mb-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="quiere_correos" {{ $user->quiere_correos ? 'checked' : '' }}>
+                        <span class="ml-2">Desea recibir correos</span>
+                    </label>
+                </div>
 
                 <button type="submit" id="submit-btn"
                     class="w-full bg-[#2e2d55] text-white py-2 rounded-lg font-semibold hover:bg-[#1f1e3d] transition">
