@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ludus Alea</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 
-    
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
+   
         @vite(['resources/css/app.css'])
-    @endif
+    
 </head>
 <body class="flex flex-col min-h-screen text-[#2e2d55] bg-[#a46f40] relative">
 
