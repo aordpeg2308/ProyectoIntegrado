@@ -35,7 +35,7 @@ Route::patch('/juegos/{juego}', [JuegoController::class, 'update'])->middleware(
 Route::delete('/juegos/{juego}', [JuegoController::class, 'destroy'])->middleware('can:delete,juego')->name('juegos.destroy');
 
 
-Route::get('/partidas', [PartidaController::class, 'index'])->name('partidas.index');
+Route::get('/partidas', [PartidaController::class, 'index'])->middleware('auth')->name('partidas.index');
 Route::get('/partidas/create', [PartidaController::class, 'create'])->middleware('can:create,App\Models\Partida')->name('partidas.create');
 Route::post('/partidas', [PartidaController::class, 'store'])->middleware('can:create,App\Models\Partida')->name('partidas.store');
 Route::get('/partidas/{partida}/edit', [PartidaController::class, 'edit'])->middleware('can:update,partida')->name('partidas.edit');
